@@ -10,9 +10,11 @@ const filterUnreadEmails = emails => emails.filter(email => !email.read)
 
 function App() {
   const [emails, setEmails] = useState(initialEmails)
-  // console.log('Inside Emails: ', emails)
+
   const [hideRead, setHideRead] = useState(false)
-  console.log('State: ', emails, hideRead)
+
+  const [currentTab, setCurrentTab] = useState('inbox')
+  console.log('State: ', emails, hideRead, currentTab)
 
   const toggleRead = targetEmail => {
     console.log('Inside toggleRead: ', targetEmail, emails)
@@ -34,31 +36,29 @@ function App() {
     console.log(updatedEmails)
     setEmails(updatedEmails)
   }
+  const starredEmails = emails.filter(email => email.starred)
 
   let filteredEmails = emails
   console.log('filteredEmails: ', filteredEmails)
-  if (hideRead) {
-    filteredEmails = filterUnreadEmails(emails)
+  if (currentTab === 'starred') {
+    if (hideRead) {
+      filteredEmails = filterUnreadEmails(emails)
+    } else {
+      filteredEmails = starredEmails
+    }
   }
-
   return (
     <div className="app">
       <Header />
       <nav className="left-menu">
         <ul className="inbox-list">
-          <li
-            className="item active"
-            // onClick={() => {}}
-          >
+          <li className="item active" onClick={() => setCurrentTab('inbox')}>
             <span className="label">Inbox</span>
-            <span className="count">?</span>
+            <span className="count">{emails.length}</span>
           </li>
-          <li
-            className="item"
-            // onClick={() => {}}
-          >
+          <li className="item" onClick={() => setCurrentTab('starred')}>
             <span className="label">Starred</span>
-            <span className="count">?</span>
+            <span className="count">{starredEmails.length}</span>
           </li>
 
           <li className="item toggle">
